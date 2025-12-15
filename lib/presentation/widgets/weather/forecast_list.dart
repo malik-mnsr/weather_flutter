@@ -13,16 +13,14 @@ class ForecastList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: Text(
             'Prévisions sur 4 jours',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 12),
@@ -31,9 +29,7 @@ class ForecastList extends StatelessWidget {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: forecasts.length,
-            itemBuilder: (context, index) {
-              return _buildForecastItem(forecasts[index]);
-            },
+            itemBuilder: (context, index) => _buildForecastItem(forecasts[index]),
           ),
         ),
       ],

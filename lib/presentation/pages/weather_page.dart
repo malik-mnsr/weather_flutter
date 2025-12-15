@@ -60,75 +60,76 @@ class _WeatherPageState extends State<WeatherPage> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Titre
-                const Text(
-                  '🌤️ Météo Flutter',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height - 32, // padding
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Découvrez la météo en temps réel',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Barre de recherche
-                SearchBar(
-                  controller: _cityController,
-                  onSearch: _handleSearch,
-                  isLoading: false,
-                ),
-
-                const SizedBox(height: 24),
-
-                // Contenu météo
-                Expanded(
-                  child: BlocBuilder<WeatherCubit, WeatherState>(
-                    bloc: _weatherCubit,
-                    builder: (context, state) {
-                      return state.when(
-                        initial: () => const LoadingIndicator(),
-                        loading: () => const LoadingIndicator(),
-                        loaded: (weather, forecasts) {
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              _handleSearch();
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '🌤️ Météo Flutter',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Découvrez la météo en temps réel',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    SearchBar(
+                      controller: _cityController,
+                      onSearch: _handleSearch,
+                      isLoading: false,
+                    ),
+                    const SizedBox(height: 24),
+                    BlocBuilder<WeatherCubit, WeatherState>(
+                      bloc: _weatherCubit,
+                      builder: (context, state) {
+                        return state.when(
+                          initial: () => const LoadingIndicator(),
+                          loading: () => const LoadingIndicator(),
+                            loaded: (weather, forecasts) {
+                              return RefreshIndicator(
+                                onRefresh: () async {
+                                  _handleSearch();
+                                },
+                                child: SingleChildScrollView(
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min, // <-- important
+                                    children: [
+                                      CurrentWeatherCard(weather: weather),
+                                      const SizedBox(height: 24),
+                                      ForecastList(forecasts: forecasts),
+                                    ],
+                                  ),
+                                ),
+                              );
                             },
-                            child: SingleChildScrollView(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  CurrentWeatherCard(weather: weather),
-                                  const SizedBox(height: 24),
-                                  ForecastList(forecasts: forecasts),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        error: (message) => ErrorDisplay(
-                          message: message,
-                          onRetry: _handleSearch,
-                        ),
-                      );
-                    },
-                  ),
+
+                          error: (message) => ErrorDisplay(
+                            message: message,
+                            onRetry: _handleSearch,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       ),
-    );
+      );
   }
 }
