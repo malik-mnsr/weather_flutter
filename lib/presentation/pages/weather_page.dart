@@ -26,8 +26,8 @@ class _WeatherPageState extends State<WeatherPage> {
     super.initState();
     _weatherCubit = getIt<WeatherCubit>();
     // Charger Paris par défaut
-    _weatherCubit.fetchWeather('Paris');
-    _cityController.text = 'Paris';
+    _weatherCubit.fetchWeather('Montpellier');
+    _cityController.text = 'Montpellier';
   }
 
   @override
@@ -52,8 +52,8 @@ class _WeatherPageState extends State<WeatherPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF6A11CB),
-              Color(0xFF2575FC),
+              Color(0xFF10000B),
+              Color(0xAA2575FC),
             ],
           ),
         ),
